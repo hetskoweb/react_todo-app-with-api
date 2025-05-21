@@ -166,13 +166,15 @@ export const App: React.FC = () => {
     setIsTogglingAll(true);
 
     Promise.all(
-      todos.map(todo =>
-        toggleTodo(todo.id, newStatus).catch(() => {
-          setError('update');
+      todos
+        .filter(todo => todo.completed !== newStatus)
+        .map(todo =>
+          toggleTodo(todo.id, newStatus).catch(() => {
+            setError('update');
 
-          return null;
-        }),
-      ),
+            return null;
+          }),
+        ),
     )
       .then(() => {
         setTodos(prevTodos =>
@@ -188,8 +190,16 @@ export const App: React.FC = () => {
   };
 
   const handleRename = (id: number, newTitle: string) => {
+    const currentTodo = todos.find(todo => todo.id === id);
+
     if (!newTitle.trim()) {
       setError('empty');
+
+      return;
+    }
+
+    if (currentTodo?.title === newTitle.trim()) {
+      setEditingId(null);
 
       return;
     }
@@ -204,11 +214,11 @@ export const App: React.FC = () => {
             todo.id === id ? { ...todo, title: newTitle } : todo,
           ),
         );
+        setEditingId(null);
       })
       .catch(() => setError('update'))
       .finally(() => {
         setRenamingId(null);
-        setEditingId(null);
       });
   };
 

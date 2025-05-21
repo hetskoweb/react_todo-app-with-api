@@ -42,8 +42,6 @@ export const TodoItem: React.FC<Props> = ({
     } else {
       handleRename(id, trimmed);
     }
-
-    setEditingId(null);
   };
 
   const handleBlur = () => {
@@ -54,8 +52,6 @@ export const TodoItem: React.FC<Props> = ({
     } else {
       handleRename(id, trimmed);
     }
-
-    setEditingId(null);
   };
 
   return (
@@ -73,6 +69,7 @@ export const TodoItem: React.FC<Props> = ({
       {isEditing ? (
         <form onSubmit={handleSubmit}>
           <input
+            data-cy="TodoTitleField"
             type="text"
             className="todo__title-field"
             placeholder="Empty todo will be deleted"
